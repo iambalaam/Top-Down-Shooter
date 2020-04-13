@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // You cannot have const values that are also editable in unity
-    [SerializeField] private bool useMouseInput = false;
+    [SerializeField] private bool useMouseInput = true;
     [SerializeField] [Range(0f, 1000f)] private float rotationSpeed = 1000f;
     [SerializeField] [Range(0f, 20f)] private float walkSpeed = 5f;
     [SerializeField] [Range(0f, 20f)] private float runSpeed = 10f;
