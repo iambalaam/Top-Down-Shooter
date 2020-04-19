@@ -6,6 +6,7 @@ using UnityEngine;
 public class GunController : MonoBehaviour
 {
     public enum GunType { SemiAuto, Burst, Auto };
+    private LineRenderer tracer;
     private AudioSource audioData;
     public AudioClip gunshot;
     public AudioClip hitMarker;
@@ -24,6 +25,8 @@ public class GunController : MonoBehaviour
 
     public void Start()
     {
+        tracer = GetComponent<LineRenderer>();
+        tracer.enabled = false;
         audioData = GetComponent<AudioSource>();
         secondsBetweenRounds = 60f / roundsPerMinute;
     }
@@ -54,7 +57,7 @@ public class GunController : MonoBehaviour
             RaycastHit raycastHit;
             bool hit = Physics.Raycast(ray, out raycastHit);
             float rayLength = hit ? raycastHit.distance : MAX_RAY_LENGTH;
-            Debug.DrawRay(ray.origin, ray.direction * rayLength, Color.yellow, 0.1f);
+            StartCoroutine(RenderTracer(barrel.position, barrel.position + (ray.direction * rayLength)));
             audioData.PlayOneShot(gunshot);
             if (hit)
             {
@@ -69,6 +72,15 @@ public class GunController : MonoBehaviour
     public void SemiAuto()
     {
         SingleShot();
+    }
+
+    IEnumerator RenderTracer(Vector3 start, Vector3 end)
+    {
+        tracer.SetPosition(0, start);
+        tracer.SetPosition(1, end);
+        tracer.enabled = true;
+        yield return null;
+        tracer.enabled = false;
     }
 
     private void Update()
