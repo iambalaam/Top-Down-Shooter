@@ -10,8 +10,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] [Range(0f, 20f)] private float walkSpeed = 5f;
     [SerializeField] [Range(0f, 20f)] private float runSpeed = 10f;
 
+    // Components
     private CharacterController controller;
+    // Public components like this are attached in the unity editor
+    public GunController gun;
     private Camera cam;
+
     private Quaternion targetRotation;
 
     void Start()
@@ -33,7 +37,10 @@ public class PlayerController : MonoBehaviour
             UpdateView(keyboardInput);
             UpdatePosition(keyboardInput);
         }
-
+        if (Input.GetButtonDown("Shoot"))
+        {
+            gun.Shoot();
+        }
 
     }
 
