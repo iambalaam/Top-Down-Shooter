@@ -2,14 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent (typeof (AudioSource))]
 public class GunController : MonoBehaviour
 {
-    private float maxRayLength = 30f;
     public enum GunType { SemiAuto, Burst, Auto };
+    private AudioSource audioData;
+    public AudioClip gunshot;
+    public AudioClip hitMarker;
+
+    private float MAX_RAY_LENGTH = 30f;
+    private float roundsPerMinute = 400f;
+    private bool isReloading = false;
+    private bool hasRoundInChamber = true;
+    private float secondsBetweenRounds;
+    private float timeToNextRoundInChamber;
+
 
     // Connected via unity editor
     public GunType gunType;
     public Transform barrel;
+
+    public void Start()
+    {
+        audioData = GetComponent<AudioSource>();
+        gunshot = GetComponent<AudioClip>();
+        hitMarker = GetComponent<AudioClip>();
+        secondsBetweenRounds = 60f / roundsPerMinute;
+    }
 
     public void Shoot()
     {
@@ -19,10 +38,8 @@ public class GunController : MonoBehaviour
                 SemiAuto();
                 break;
             case GunType.Burst:
-                StartCoroutine(Burst());
                 break;
             case GunType.Auto:
-                SemiAuto();
                 break;
             default:
                 SemiAuto();
@@ -32,10 +49,23 @@ public class GunController : MonoBehaviour
 
     public void SingleShot()
     {
-        Ray ray = new Ray(barrel.position, barrel.forward);
-        RaycastHit hit;
-        float rayLength = (Physics.Raycast(ray, out hit)) ? hit.distance : maxRayLength;
-        Debug.DrawRay(ray.origin, ray.direction * rayLength, Color.yellow, 0.1f);
+        if (!isReloading && hasRoundInChamber)
+        {
+            // Shoot
+            Ray ray = new Ray(barrel.position, barrel.forward);
+            RaycastHit raycastHit;
+            bool hit = Physics.Raycast(ray, out raycastHit);
+            float rayLength = hit ? raycastHit.distance : MAX_RAY_LENGTH;
+            Debug.DrawRay(ray.origin, ray.direction * rayLength, Color.yellow, 0.1f);
+            audioData.PlayOneShot(gunshot);
+            if (hit)
+            {
+                audioData.PlayOneShot(hitMarker);
+            }
+            // Queue next round
+            hasRoundInChamber = false;
+            timeToNextRoundInChamber = secondsBetweenRounds;
+        }
     }
 
     public void SemiAuto()
@@ -43,26 +73,14 @@ public class GunController : MonoBehaviour
         SingleShot();
     }
 
-    public IEnumerator Burst ()
+    private void Update()
     {
-        // This works for now, but deferring should not be done like this
-        // This will make the fire rate of the weapon dependent on the frame rate of the game.
-        SingleShot();
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
-        SingleShot();
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
-        SingleShot();
+        if (!hasRoundInChamber && timeToNextRoundInChamber <= 0)
+        {
+            hasRoundInChamber = true;
+        } else
+        {
+            timeToNextRoundInChamber -= Time.deltaTime;
+        }
     }
 }
