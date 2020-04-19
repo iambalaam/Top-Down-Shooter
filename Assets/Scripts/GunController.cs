@@ -25,8 +25,6 @@ public class GunController : MonoBehaviour
     public void Start()
     {
         audioData = GetComponent<AudioSource>();
-        gunshot = GetComponent<AudioClip>();
-        hitMarker = GetComponent<AudioClip>();
         secondsBetweenRounds = 60f / roundsPerMinute;
     }
 
