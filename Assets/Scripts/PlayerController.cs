@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
             UpdateView(keyboardInput);
             UpdatePosition(keyboardInput);
         }
-        if (Input.GetButtonDown("Shoot"))
+        if (Input.GetButton("Shoot"))
         {
             gun.Shoot();
         }
