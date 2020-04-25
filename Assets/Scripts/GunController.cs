@@ -8,11 +8,9 @@ public class GunController : MonoBehaviour
     public enum GunType { SemiAuto, Burst, Auto };
     private LineRenderer tracer;
     private AudioSource audioData;
-    public AudioClip gunshot;
-    public AudioClip hitMarker;
 
     private float MAX_RAY_LENGTH = 30f;
-    private float roundsPerMinute = 400f;
+    private float roundsPerMinute = 700f;
     private bool isReloading = false;
     private bool hasRoundInChamber = true;
     private float secondsBetweenRounds;
@@ -22,6 +20,10 @@ public class GunController : MonoBehaviour
     // Connected via unity editor
     public GunType gunType;
     public Transform barrel;
+    public Transform chamber;
+    public AudioClip gunshot;
+    public AudioClip hitMarker;
+    public Rigidbody shellCasing;
 
     public void Start()
     {
@@ -57,7 +59,13 @@ public class GunController : MonoBehaviour
             RaycastHit raycastHit;
             bool hit = Physics.Raycast(ray, out raycastHit);
             float rayLength = hit ? raycastHit.distance : MAX_RAY_LENGTH;
+            // Render tracer
             StartCoroutine(RenderTracer(barrel.position, barrel.position + (ray.direction * rayLength)));
+            // Add shell ejection
+            // TODO: Align the shell casing roatation with the gun
+            Rigidbody newShellCasing = Instantiate(shellCasing, chamber.position, Quaternion.identity);
+            newShellCasing.AddForce(chamber.forward * Random.Range(150f, 200f) + chamber.right * Random.Range(-10f, 10f));
+            // Play sound effect
             audioData.PlayOneShot(gunshot);
             if (hit)
             {
