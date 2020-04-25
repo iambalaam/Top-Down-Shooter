@@ -64,7 +64,8 @@ public class GunController : MonoBehaviour
             // Add shell ejection
             // TODO: Align the shell casing roatation with the gun
             Rigidbody newShellCasing = Instantiate(shellCasing, chamber.position, Quaternion.identity);
-            newShellCasing.AddForce(chamber.forward * Random.Range(150f, 200f) + chamber.right * Random.Range(-10f, 10f));
+            newShellCasing.AddForce(chamber.forward * Random.Range(100f, 200f) + chamber.right * Random.Range(-10f, 10f));
+            newShellCasing.AddRelativeTorque(new Vector3(-600, -1000, 0));
             // Play sound effect
             audioData.PlayOneShot(gunshot);
             if (hit)
