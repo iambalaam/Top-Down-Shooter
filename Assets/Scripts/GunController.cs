@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent (typeof (AudioSource))]
 public class GunController : MonoBehaviour
 {
     public enum GunType { SemiAuto, Burst, Auto };
@@ -11,7 +10,9 @@ public class GunController : MonoBehaviour
     private Light muzzleFlash;
 
     private float MAX_RAY_LENGTH = 30f;
-    private float roundsPerMinute = 700f;
+    private float ROUNDS_PER_MINUTE = 700f;
+    private int MAGAZINE_SIZE = 30;
+    private int roundsLoaded;
     private bool isReloading = false;
     private bool hasRoundInChamber = true;
     private float secondsBetweenRounds;
@@ -33,7 +34,13 @@ public class GunController : MonoBehaviour
         muzzleFlash = GetComponent<Light>();
         muzzleFlash.enabled = false;
         audioData = GetComponent<AudioSource>();
-        secondsBetweenRounds = 60f / roundsPerMinute;
+        secondsBetweenRounds = 60f / ROUNDS_PER_MINUTE;
+        roundsLoaded = MAGAZINE_SIZE;
+    }
+
+    public int GetAmmunition()
+    {
+        return roundsLoaded;
     }
 
     public void Shoot()
@@ -55,8 +62,9 @@ public class GunController : MonoBehaviour
 
     public void SingleShot()
     {
-        if (!isReloading && hasRoundInChamber)
+        if (roundsLoaded > 0 && !isReloading && hasRoundInChamber)
         {
+            roundsLoaded--;
             // Shoot
             Ray ray = new Ray(barrel.position, barrel.forward);
             RaycastHit raycastHit;

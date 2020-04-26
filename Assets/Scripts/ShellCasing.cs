@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class ShellCasing : MonoBehaviour
 {
-    public float LIFE_TIME = 5f;
+    public float LIFE_TIME = 10f;
+    public AudioClip casing;
     private Material mat;
     private Color originalColor;
     private Rigidbody rigidBody;
-    
+    private AudioSource audioSource;
+
     void Start()
     {
         mat = GetComponent<Renderer>().material;
         rigidBody = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
         originalColor = mat.color;
         StartCoroutine(Fade());
     }
@@ -30,10 +33,7 @@ public class ShellCasing : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        Debug.Log("Collision with " + collider.name);
-        if (collider.tag == "Ground")
-        {
-            rigidBody.Sleep();
-        }
+        audioSource.PlayOneShot(casing);
+        rigidBody.Sleep();
     }
-}
+};
