@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool useMouseInput = true;
     [SerializeField] [Range(0f, 1000f)] private float rotationSpeed = 1000f;
     [SerializeField] [Range(0f, 20f)] private float walkSpeed = 5f;
-    [SerializeField] [Range(0f, 20f)] private float runSpeed = 10f;
 
     // Components
     private CharacterController controller;
@@ -40,10 +39,16 @@ public class PlayerController : MonoBehaviour
             UpdateView(keyboardInput);
             UpdatePosition(keyboardInput);
         }
+
+        if (Input.GetButtonDown("Reload"))
+        {
+            StartCoroutine(gun.Reload());
+        }
         if (Input.GetButton ("Shoot"))
         {
             gun.Shoot();
         }
+        
 
     }
 
@@ -85,8 +90,7 @@ public class PlayerController : MonoBehaviour
         Vector3 motion = Vector3.zero;
         if (velocity != null && velocity != Vector3.zero)
         {
-            float speed = Input.GetButton("Run") ? runSpeed : walkSpeed;
-            motion = velocity.normalized * speed;
+            motion = velocity.normalized * walkSpeed;
         };
         motion.y += verticalVelocity;
         controller.Move(motion * Time.deltaTime);

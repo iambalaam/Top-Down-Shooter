@@ -25,6 +25,7 @@ public class GunController : MonoBehaviour
     public Transform chamber;
     public AudioClip gunshot;
     public AudioClip hitMarker;
+    public AudioClip reload;
     public Rigidbody shellCasing;
 
     public void Start()
@@ -41,6 +42,15 @@ public class GunController : MonoBehaviour
     public int GetAmmunition()
     {
         return roundsLoaded;
+    }
+
+    public IEnumerator Reload()
+    {
+        isReloading = true;
+        audioData.PlayOneShot(reload);
+        yield return new WaitForSeconds(1f);
+        roundsLoaded = roundsLoaded == 0 ? MAGAZINE_SIZE : MAGAZINE_SIZE + 1;
+        isReloading = false;        
     }
 
     public void Shoot()

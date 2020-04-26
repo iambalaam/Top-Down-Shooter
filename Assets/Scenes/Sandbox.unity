@@ -21687,6 +21687,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -22223,7 +22224,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh29138
+  m_Name: pb_Mesh30838
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -22432,6 +22433,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -22507,6 +22509,7 @@ MonoBehaviour:
   chamber: {fileID: 212845731}
   gunshot: {fileID: 8300000, guid: 1b145bcffd767854fb0c71c37678ebaa, type: 3}
   hitMarker: {fileID: 8300000, guid: 23b27b3504d3a82449832408bea69aa3, type: 3}
+  reload: {fileID: 8300000, guid: 03e67962431d7ab42aa4ac78ee1e4f9f, type: 3}
   shellCasing: {fileID: 8108727862546004231, guid: 6991256f122e0d743b91e1cc8c1a3bca,
     type: 3}
 --- !u!23 &2010252112
