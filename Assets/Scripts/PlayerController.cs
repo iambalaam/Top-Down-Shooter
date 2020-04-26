@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private float verticalVelocity;
-    private float GRAVITY = 9.8f;
+    private float GRAVITY = 20f;
     // You cannot have const values that are also editable in unity
     [SerializeField] private bool useMouseInput = true;
     [SerializeField] [Range(0f, 1000f)] private float rotationSpeed = 1000f;

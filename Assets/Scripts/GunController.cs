@@ -8,6 +8,7 @@ public class GunController : MonoBehaviour
     public enum GunType { SemiAuto, Burst, Auto };
     private LineRenderer tracer;
     private AudioSource audioData;
+    private Light muzzleFlash;
 
     private float MAX_RAY_LENGTH = 30f;
     private float roundsPerMinute = 700f;
@@ -29,6 +30,8 @@ public class GunController : MonoBehaviour
     {
         tracer = GetComponent<LineRenderer>();
         tracer.enabled = false;
+        muzzleFlash = GetComponent<Light>();
+        muzzleFlash.enabled = false;
         audioData = GetComponent<AudioSource>();
         secondsBetweenRounds = 60f / roundsPerMinute;
     }
@@ -59,10 +62,11 @@ public class GunController : MonoBehaviour
             RaycastHit raycastHit;
             bool hit = Physics.Raycast(ray, out raycastHit);
             float rayLength = hit ? raycastHit.distance : MAX_RAY_LENGTH;
-            // Render tracer
+            // Render
             StartCoroutine(RenderTracer(barrel.position, barrel.position + (ray.direction * rayLength)));
+            StartCoroutine(RenderMuzzleFlash());
             // Add shell ejection
-            // TODO: Align the shell casing roatation with the gun
+            // TODO: Align the shell casing rotation with the gun
             Rigidbody newShellCasing = Instantiate(shellCasing, chamber.position, Quaternion.identity);
             newShellCasing.AddForce(chamber.forward * Random.Range(100f, 200f) + chamber.right * Random.Range(-10f, 10f));
             newShellCasing.AddRelativeTorque(new Vector3(-600, -1000, 0));
@@ -90,6 +94,13 @@ public class GunController : MonoBehaviour
         tracer.enabled = true;
         yield return null;
         tracer.enabled = false;
+    }
+
+    IEnumerator RenderMuzzleFlash()
+    {
+        muzzleFlash.enabled = true;
+        yield return null;
+        muzzleFlash.enabled = false;
     }
 
     private void Update()
