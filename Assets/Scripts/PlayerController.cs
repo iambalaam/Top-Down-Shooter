@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
+    private float verticalVelocity;
     private float GRAVITY = 9.8f;
     // You cannot have const values that are also editable in unity
     [SerializeField] private bool useMouseInput = true;
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         cam = Camera.main;
+        verticalVelocity = 0;
     }
 
     void Update()
@@ -72,12 +74,21 @@ public class PlayerController : MonoBehaviour
     }
     void UpdatePosition(Vector3 velocity)
     {
+        if (controller.isGrounded)
+        {
+            verticalVelocity = 0;
+        } else
+        {
+            verticalVelocity -= GRAVITY * Time.deltaTime;
+        }
+
+        Vector3 motion = Vector3.zero;
         if (velocity != null && velocity != Vector3.zero)
         {
             float speed = Input.GetButton("Run") ? runSpeed : walkSpeed;
-            Vector3 motion = velocity.normalized * speed;
-            Vector3 gravity = Vector3.down * GRAVITY;
-            controller.Move(motion * Time.deltaTime + gravity);
+            motion = velocity.normalized * speed;
         };
+        motion.y += verticalVelocity;
+        controller.Move(motion * Time.deltaTime);
     }
 }
