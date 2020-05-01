@@ -8,6 +8,7 @@ public class GunController : MonoBehaviour
     private LineRenderer tracer;
     private AudioSource audioData;
     private Light muzzleFlash;
+    private float damage = 10;
 
     private float MAX_RAY_LENGTH = 30f;
     private float ROUNDS_PER_MINUTE = 700f;
@@ -80,6 +81,15 @@ public class GunController : MonoBehaviour
             RaycastHit raycastHit;
             bool hit = Physics.Raycast(ray, out raycastHit);
             float rayLength = hit ? raycastHit.distance : MAX_RAY_LENGTH;
+            if (hit)
+            {
+                Health health = raycastHit.collider.GetComponent<Health>();
+                if (health)
+                {
+                    health.TakeDamage(damage, ray.direction * 500, ray.GetPoint(raycastHit.distance));
+                }
+
+            }
             // Render
             StartCoroutine(RenderTracer(barrel.position, barrel.position + (ray.direction * rayLength)));
             StartCoroutine(RenderMuzzleFlash());
